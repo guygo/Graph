@@ -12,15 +12,22 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
@@ -29,6 +36,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ui.elements.*;
 
@@ -83,11 +93,38 @@ public class WindowBuilder {
 	private void constructButton(String name, EventHandler<ActionEvent> handler, Image image, HBox hbox) {
 
 		hbox.getChildren().add(new ButtonBuilder(name, image, handler));
+		
 	}
 
 	private void constructButton(String name, EventHandler<ActionEvent> handler, HBox hbox) {
 
-		hbox.getChildren().add(new ButtonBuilder(name, handler));
+		Button b=new ButtonBuilder(name, handler);
+		BackgroundImage bi=new BackgroundImage(createimage("/Images/graph.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+		Background back=new Background(bi);
+		b.setBackground(back);
+		b.setPrefHeight(140);
+		b.setPrefWidth(140);
+		 Light.Distant light = new Light.Distant();
+	        light.setAzimuth(-135.0f);
+	        light.setElevation(30.0f);
+	 
+	        Lighting l = new Lighting();
+	        l.setLight(light);
+	        l.setSurfaceScale(5.0f);
+	 
+	        final Text t = new Text();
+	        t.setText("DistantLight");
+	        t.setFill(Color.RED);
+	        t.setFont(Font.font(null, FontWeight.BOLD, 70));
+	        t.setX(10.0f);
+	        t.setY(10.0f);
+	        t.setTextOrigin(VPos.TOP);
+	 
+	        t.setEffect(l);
+	        b.setTextFill(Color.RED);
+	        b.setFont(Font.font(null, FontWeight.BOLD, 30));
+	        b.setEffect(l);
+		hbox.getChildren().add(b);
 	}
 
 	
@@ -218,7 +255,7 @@ public class WindowBuilder {
 				root.getChildren().addAll(pathlist);
 				paths.PlayAnimation(new LinkedList<Path>(pathlist));
 			}
-		}, createimage("/Images/graph.png"), hbox);
+		}, hbox);
 
 		constructButton("bfs", e -> {
 			mode = Mode.SELECT;
@@ -251,7 +288,7 @@ public class WindowBuilder {
 				paths.PlayAnimation(new LinkedList<Path>(pathlist));
 			}
 
-		}, createimage("/Images/graph.png"), hbox);
+		}, hbox);
 
 		
 
